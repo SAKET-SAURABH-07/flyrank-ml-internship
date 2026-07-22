@@ -1,73 +1,517 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flyrank ML Internship</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlyRank Search Intelligence | ML Capstone Research Paper</title>
+  
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
+    :root {
+      --bg-main: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(59, 130, 246, 0.4);
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.25);
+      --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.2);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #f0f4ff, #e0e7ff);
-      color: #333;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.7;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 65%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    /* --- Hero Section --- */
+    .hero {
+      position: relative;
+      padding: 100px 20px 80px;
+      text-align: center;
+      background: radial-gradient(circle at top, rgba(30, 58, 138, 0.35) 0%, transparent 70%);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent);
+      padding: 6px 18px;
+      border-radius: 50px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      backdrop-filter: blur(8px);
+    }
+
+    .badge-pill i {
+      font-size: 0.75rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+
+    .hero .subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto 32px;
+      font-weight: 500;
+    }
+
+    .hero .author-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-surface);
+      padding: 8px 20px;
+      border-radius: 30px;
+      border: 1px solid var(--border-color);
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .hero .author-tag i {
+      color: var(--primary);
+    }
+
+    /* --- Container & Layout --- */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+
+    section {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      margin-bottom: 32px;
+      transition: var(--transition);
+    }
+
+    section:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+    }
+
+    /* --- Section Headings --- */
+    h2 {
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    h2 i {
+      color: var(--primary);
+      font-size: 1.4rem;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 10px;
+    }
+
+    /* --- Grids & Cards --- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      padding: 24px;
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-hover);
+      box-shadow: 0 10px 25px -5px var(--primary-glow);
+    }
+
+    .metric-card {
+      text-align: center;
+      padding: 28px 20px;
+    }
+
+    .metric {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-top: 8px;
+      letter-spacing: -0.03em;
+    }
+
+    /* --- Stylized Lists --- */
+    ul.custom-list, ol.custom-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    ul.custom-list li, ol.custom-list li {
+      position: relative;
+      padding-left: 36px;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    ul.custom-list li::before {
+      content: "\f00c";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      position: absolute;
+      left: 0;
+      top: 2px;
+      color: var(--accent);
+      background: rgba(16, 185, 129, 0.1);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      font-size: 0.75rem;
     }
-    .container {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 2rem 3rem;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      max-width: 800px;
-      text-align: center;
+
+    ol.custom-list {
+      counter-reset: item;
     }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      color: #2c3e50;
+
+    ol.custom-list li::before {
+      counter-increment: item;
+      content: counter(item);
+      position: absolute;
+      left: 0;
+      top: 2px;
+      color: var(--primary);
+      background: rgba(59, 130, 246, 0.12);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
     }
-    p {
-      margin: 1rem 0;
-      line-height: 1.6;
-    }
-    a {
-      color: #1e88e5;
-      text-decoration: none;
+
+    /* --- Interactive Buttons & Links --- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--primary), #2563eb);
+      color: white;
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
       font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      box-shadow: 0 4px 15px var(--primary-glow);
     }
-    a:hover {
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+      text-decoration: none;
+    }
+
+    .link-styled {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .link-styled:hover {
+      color: #93c5fd;
       text-decoration: underline;
     }
-    .badge {
-      display: inline-block;
-      background: #4caf50;
-      color: white;
-      padding: 0.2rem 0.6rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      margin-top: 0.5rem;
+
+    /* --- PDF Frame Modern Shell --- */
+    .pdf-shell {
+      position: relative;
+      background: #020617;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      margin-top: 15px;
+    }
+
+    .pdf-toolbar {
+      background: #0f172a;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    iframe {
+      width: 100%;
+      height: 750px;
+      border: none;
+      display: block;
+    }
+
+    /* --- Problem Statement Box --- */
+    .problem-box {
+      background: rgba(59, 130, 246, 0.08);
+      border-left: 4px solid var(--primary);
+      padding: 20px 24px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin: 20px 0;
+    }
+
+    .problem-box h3 {
+      color: var(--primary);
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    /* --- Footer --- */
+    footer {
+      border-top: 1px solid var(--border-color);
+      background: #020617;
+      color: var(--text-muted);
+      padding: 40px 20px;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    footer p {
+      margin-top: 6px;
+    }
+
+    /* --- Responsive Adjustments --- */
+    @media (max-width: 768px) {
+      .container { padding: 30px 15px; }
+      section { padding: 25px; }
+      iframe { height: 500px; }
     }
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>Flyrank ML Internship Project</h1>
-    <p class="badge">⚡ Powered by Python &amp; Machine Learning</p>
-    <p>
-      Welcome to the <strong>Flyrank</strong> internship repository. This project contains data processing pipelines, feature engineering, model training, and visualisation utilities for the Flyrank competition.
-    </p>
-    <p>
-      Explore the source code in the <code>src/</code> directory, view notebooks in <code>notebooks/</code>, and read the documentation in <code>docs/</code>.
-    </p>
-    <p>
-      <a href="https://github.com/your-username/flyrank-ml-internship" target="_blank">View the repository on GitHub</a>
-    </p>
-    <p>
-      <a href="https://your-username.github.io/flyrank-ml-internship/" target="_blank">GitHub Pages (once enabled)</a>
-    </p>
-  </div>
+
+  <!-- Hero Header -->
+  <header class="hero">
+    <div class="badge-pill">
+      <i class="fa-solid fa-microchip"></i> Machine Learning Capstone Research
+    </div>
+    <h1>FlyRank Search Intelligence</h1>
+    <p class="subtitle">Predictive Search Decay Modeling & Ranked Prioritization</p>
+    <div class="author-tag">
+      <i class="fa-solid fa-user-pen"></i> Author: <strong>Saket Saurabh</strong>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Abstract -->
+    <section>
+      <h2><i class="fa-solid fa-file-lines"></i> Abstract</h2>
+      <p style="color: var(--text-muted); font-size: 1.05rem;">
+        This research explores how machine learning can support predictive search intelligence by identifying patterns of search performance changes and ranking priorities. The system uses historical search data, feature engineering, and supervised learning approaches to model future search behaviour. Different machine learning strategies are evaluated against baseline approaches using consistent validation methodology. The developed pipeline transforms raw search signals into actionable recommendations, ultimately providing a dynamic decision-support framework for prioritizing search optimization opportunities.
+      </p>
+    </section>
+
+    <!-- Problem Statement -->
+    <section>
+      <h2><i class="fa-solid fa-bullseye"></i> Introduction & Problem Statement</h2>
+      <p style="color: var(--text-muted);">
+        Search ecosystems continuously change due to user behaviour, competition, and evolving algorithms. This research addresses a fundamental decision challenge:
+      </p>
+      
+      <div class="problem-box">
+        <h3>Which search entities should be prioritized before performance declines?</h3>
+      </div>
+      
+      <p style="color: var(--text-muted);">
+        The goal is not to replace human decision-making, but to provide data-driven intelligence for proactive optimization and resource allocation.
+      </p>
+    </section>
+
+    <!-- Data Overview -->
+    <section>
+      <h2><i class="fa-solid fa-database"></i> Data Architecture</h2>
+      <div class="grid">
+        <div class="card">
+          <i class="fa-solid fa-server" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 12px;"></i>
+          <h3>Dataset</h3>
+          <p style="color: var(--text-muted);">Built using the official FlyRank ML Internship Dataset.</p>
+        </div>
+        <div class="card">
+          <i class="fa-solid fa-gears" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 12px;"></i>
+          <h3>Processing</h3>
+          <p style="color: var(--text-muted);">Data cleaning, feature engineering, and preparation for ML model experiments.</p>
+        </div>
+        <div class="card">
+          <i class="fa-solid fa-shield-halved" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 12px;"></i>
+          <h3>Data Safety</h3>
+          <p style="color: var(--text-muted);">Excluded incomplete records and potential leakage-prone historical fields.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Methodology -->
+    <section>
+      <h2><i class="fa-solid fa-diagram-project"></i> Methodology</h2>
+      <ul class="custom-list">
+        <li>End-to-end data preprocessing and imputation pipeline</li>
+        <li>Feature engineering derived from complex search performance signals</li>
+        <li>Supervised machine learning model training and hyperparameter tuning</li>
+        <li>Empirical benchmark evaluation against baseline statistical models</li>
+        <li>Rigorous validation and data-leakage prevention checks</li>
+      </ul>
+    </section>
+
+    <!-- Results -->
+    <section>
+      <h2><i class="fa-solid fa-chart-line"></i> Experimental Results</h2>
+      <div class="grid">
+        <div class="card metric-card">
+          <h3>Baseline</h3>
+          <div class="metric">--</div>
+        </div>
+        <div class="card metric-card">
+          <h3>ML Model</h3>
+          <div class="metric">--</div>
+        </div>
+        <div class="card metric-card">
+          <h3>Improvement</h3>
+          <div class="metric" style="color: var(--accent);">--</div>
+        </div>
+      </div>
+      <p style="color: var(--text-muted); margin-top: 20px; text-align: center; font-size: 0.95rem;">
+        <i class="fa-solid fa-info-circle"></i> Benchmark values and evaluation charts will update live upon conclusion of active experiments.
+      </p>
+    </section>
+
+    <!-- Paper PDF Showcase -->
+    <section>
+      <h2><i class="fa-solid fa-book-open"></i> Research Documentation</h2>
+      <p style="color: var(--text-muted); margin-bottom: 15px;">Read the complete research paper detailing the methodology and experiment logs below:</p>
+      
+      <div class="pdf-shell">
+        <div class="pdf-toolbar">
+          <span style="font-size: 0.9rem; color: var(--text-muted);"><i class="fa-solid fa-file-pdf" style="color: #ef4444; margin-right: 6px;"></i> flyrank-seo-research-march-2026.pdf</span>
+          <a href="docs/flyrank-seo-research-march-2026.pdf" target="_blank" class="link-styled">
+            Full Screen <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+        <iframe src="docs/flyrank-seo-research-march-2026.pdf"></iframe>
+      </div>
+      
+      <div style="margin-top: 20px; text-align: center;">
+        <a href="docs/flyrank-seo-research-march-2026.pdf" target="_blank" class="btn">
+          <i class="fa-solid fa-download"></i> Download PDF Paper
+        </a>
+      </div>
+    </section>
+
+    <!-- Honest Framing -->
+    <section>
+      <h2><i class="fa-solid fa-scale-balanced"></i> Limitations & Strategic Scope</h2>
+      <p style="color: var(--text-muted);">
+        This framework is designed as a predictive decision-support tool. Predictions rely on observed historical dynamics; emergent algorithm updates or external market shifts require periodic model retraining. Human strategic oversight remains vital when executing domain-specific recommendations.
+      </p>
+    </section>
+
+    <!-- Recommendations -->
+    <section>
+      <h2><i class="fa-solid fa-list-check"></i> Ranked Recommendations</h2>
+      <ol class="custom-list">
+        <li>Prioritize decaying search entities to mitigate performance drop-off.</li>
+        <li>Monitor emerging growth signals to capitalize on rising trends early.</li>
+        <li>Integrate model output probabilities directly into domain workflows.</li>
+        <li>Maintain a continuous learning pipeline with incoming search performance batches.</li>
+      </ol>
+    </section>
+
+    <!-- Reproducibility -->
+    <section>
+      <h2><i class="fa-solid fa-code-branch"></i> Code & Reproducibility</h2>
+      <p style="color: var(--text-muted); margin-bottom: 20px;">
+        All experimental pipelines, preprocessing code, and modeling notebooks are open-source and structured for full reproducibility.
+      </p>
+      <a href="https://github.com/SAKET-SAURABH-07/flyrank-ml-internship" target="_blank" class="btn">
+        <i class="fa-brands fa-github"></i> Explore GitHub Repository
+      </a>
+    </section>
+
+    <!-- Acknowledgments -->
+    <section>
+      <h2><i class="fa-solid fa-heart"></i> Acknowledgments & Data Credits</h2>
+      <p style="color: var(--text-muted);">
+        This project was developed utilizing the dataset provided during the Machine Learning Internship at 
+        <a href="https://flyrank.ai" target="_blank" class="link-styled">FlyRank AI <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.75rem;"></i></a>.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p><strong>© 2026 Saket Saurabh</strong> | FlyRank ML Internship Capstone Research</p>
+  </footer>
+
 </body>
+
 </html>
